@@ -9,12 +9,14 @@ type GroupStore = {
   addGroup: (group: Group) => void;
   removeGroup: (groupId: string) => void;
   resetGroups: () => void;
+  isHydrated: boolean;
 };
 
 export const useGroupStore = create<GroupStore>()(
   persist(
     (set) => ({
-      groups: dummyGroups, 
+      groups: dummyGroups,
+      isHydrated: false,
 
       addGroup: (group) =>
         set((state) => ({
@@ -26,11 +28,16 @@ export const useGroupStore = create<GroupStore>()(
           groups: state.groups.filter((g) => g.id !== groupId),
         })),
 
-      resetGroups: () => set({ groups: dummyGroups }), 
+      resetGroups: () => set({ groups: dummyGroups }),
     }),
     {
       name: 'group-storage',
-      storage: createJSONStorage(() => AsyncStorage), 
+      storage: createJSONStorage(() => AsyncStorage),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.isHydrated = true;
+        }
+      },
     }
   )
 );
