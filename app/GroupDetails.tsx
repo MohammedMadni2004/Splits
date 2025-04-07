@@ -72,7 +72,11 @@ export default function GroupDetails() {
         data={group.members}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Text style={[tw`p-2`, { color: styles.textColor }]}>{item.name}</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('MemberDetails', { groupId: group.id, memberId: item.id })}
+          >
+            <Text style={[tw`p-2`, { color: styles.textColor }]}>{item.name}</Text>
+          </TouchableOpacity>
         )}
         ListEmptyComponent={
           <Text style={[tw`text-sm`, { color: styles.fadedText }]}>No members found</Text>
