@@ -12,11 +12,10 @@ export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
-  // Call useThemeColor unconditionally at the top level
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
-  const iconBackgroundColor = useThemeColor({}, 'icon');
-  const tintColor = useThemeColor({}, 'tint');
+  const cardBackgroundColor = useThemeColor({}, 'icon');
+  const buttonColor = useThemeColor({}, 'tint');
 
   useEffect(() => {
     if (isHydrated && isLoading) {
@@ -34,7 +33,7 @@ export default function HomeScreen() {
 
   return (
     <View style={[tw`flex-1 p-4`, { backgroundColor }]}>
-      <Text style={[tw`text-xl font-bold mb-4`, { color: textColor }]}>Your Groups</Text>
+      <Text style={[tw`text-2xl font-bold mb-6`, { color: textColor }]}>Your Groups</Text>
       <FlatList
         data={groups}
         keyExtractor={(item) => item.id}
@@ -42,30 +41,35 @@ export default function HomeScreen() {
           const { totalAmount, totalOwed, totalPaid } = calculateTotals(item);
           return (
             <TouchableOpacity
-              style={[tw`p-4 mb-3 rounded`, { backgroundColor: iconBackgroundColor }]}
+              style={[
+                tw`p-4 mb-4 rounded-lg shadow-lg`,
+                { backgroundColor: cardBackgroundColor, elevation: 4 },
+              ]}
               onPress={() => navigation.navigate('GroupDetails', { groupId: item.id })}
             >
               <Text style={[tw`text-lg font-bold`, { color: textColor }]}>{item.name}</Text>
-              <Text style={{ color: textColor }}>{item.description}</Text>
-              <Text style={{ color: textColor }}>Members: {item.members.map((m) => m.name).join(', ')}</Text>
-              <Text style={[tw`mt-2 text-sm`, { color: textColor }]}>Total Amount: ₹{totalAmount}</Text>
-              <Text style={{ color: textColor }}>Total Owed: ₹{totalOwed}</Text>
-              <Text style={{ color: textColor }}>Total Paid: ₹{totalPaid}</Text>
+              <Text style={[tw`text-sm`, { color: textColor }]}>{item.description}</Text>
+              <View style={tw`mt-2`}>
+                <Text style={[tw`text-sm`, { color: textColor }]}>Members: {item.members.map((m) => m.name).join(', ')}</Text>
+                <Text style={[tw`text-sm`, { color: textColor }]}>Total Amount: ₹{totalAmount}</Text>
+                <Text style={[tw`text-sm`, { color: textColor }]}>Total Owed: ₹{totalOwed}</Text>
+                <Text style={[tw`text-sm`, { color: textColor }]}>Total Paid: ₹{totalPaid}</Text>
+              </View>
             </TouchableOpacity>
           );
         }}
         ListEmptyComponent={
-          <Text style={[tw`text-center mt-4`, { color: textColor }]}>No groups available. Add a new group!</Text>
+          <Text style={[tw`text-center text-lg`, { color: textColor }]}>No groups available. Add a new group!</Text>
         }
       />
       <TouchableOpacity
         style={[
-          tw`absolute bottom-8 right-8 w-12 h-12 rounded-full items-center justify-center shadow-lg`,
-          { backgroundColor: tintColor },
+          tw`absolute bottom-8 right-8 w-16 h-16 rounded-full items-center justify-center shadow-lg`,
+          { backgroundColor: buttonColor, elevation: 6 },
         ]}
         onPress={() => navigation.navigate('CreateGroup')}
       >
-        <Text style={[tw`text-2xl`, { color: backgroundColor }]}>+</Text>
+        <Text style={[tw`text-3xl font-bold`, { color: backgroundColor }]}>+</Text>
       </TouchableOpacity>
     </View>
   );

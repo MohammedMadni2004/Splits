@@ -33,9 +33,17 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={theme === 'dark' ? DarkTheme : DefaultTheme}>
-      <View style={tw`flex-row justify-end items-center p-4 bg-gray-200`}>
-        <Text style={tw`mr-2 text-gray-700`}>Dark Mode</Text>
-        <Switch value={theme === 'dark'} onValueChange={toggleTheme} />
+      <View style={[tw`flex-row justify-between items-center p-4`, { backgroundColor: Colors[theme].background }]}>
+        <Text style={[tw`text-lg font-bold`, { color: Colors[theme].text }]}>Splitzz</Text>
+        <View style={tw`flex-row items-center`}>
+          <Text style={[tw`mr-2`, { color: Colors[theme].text }]}>Dark Mode</Text>
+          <Switch
+            value={theme === 'dark'}
+            onValueChange={toggleTheme}
+            thumbColor={theme === 'dark' ? Colors.dark.tint : Colors.light.tint}
+            trackColor={{ false: Colors.light.icon, true: Colors.dark.icon }}
+          />
+        </View>
       </View>
       <Stack
         screenOptions={{

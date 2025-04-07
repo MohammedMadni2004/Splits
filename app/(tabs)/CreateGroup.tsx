@@ -13,6 +13,7 @@ export default function CreateGroup() {
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const borderColor = useThemeColor({}, 'icon');
+  const buttonColor = useThemeColor({}, 'tint');
 
   const addGroup = useGroupStore((state) => state.addGroup);
 
@@ -90,11 +91,11 @@ export default function CreateGroup() {
   const isCreateDisabled = !groupName.trim() || members.length < 2;
 
   return (
-    <View style={[tw`flex-1 p-4`, { backgroundColor }]}>
-      <Text style={[tw`text-xl font-bold mb-4`, { color: textColor }]}>Create Group</Text>
+    <View style={[tw`flex-1 p-6`, { backgroundColor }]}>
+      <Text style={[tw`text-2xl font-bold mb-6`, { color: textColor }]}>Create Group</Text>
 
       <TextInput
-        style={[tw`border rounded p-2 mb-3`, { borderColor, color: textColor }]}
+        style={[tw`border rounded-lg p-3 mb-4`, { borderColor, color: textColor }]}
         placeholder="Group Name"
         placeholderTextColor={borderColor}
         value={groupName}
@@ -102,24 +103,24 @@ export default function CreateGroup() {
       />
 
       <TextInput
-        style={[tw`border rounded p-2 mb-3`, { borderColor, color: textColor }]}
+        style={[tw`border rounded-lg p-3 mb-4`, { borderColor, color: textColor }]}
         placeholder="Group Description"
         placeholderTextColor={borderColor}
         value={groupDescription}
         onChangeText={setGroupDescription}
       />
 
-      <Text style={[tw`text-lg font-bold mt-4 mb-2`, { color: textColor }]}>Add Member</Text>
+      <Text style={[tw`text-lg font-bold mb-4`, { color: textColor }]}>Add Member</Text>
 
       <TextInput
-        style={[tw`border rounded p-2 mb-2`, { borderColor, color: textColor }]}
+        style={[tw`border rounded-lg p-3 mb-3`, { borderColor, color: textColor }]}
         placeholder="Name"
         placeholderTextColor={borderColor}
         value={newMemberName}
         onChangeText={setNewMemberName}
       />
       <TextInput
-        style={[tw`border rounded p-2 mb-2`, { borderColor, color: textColor }]}
+        style={[tw`border rounded-lg p-3 mb-3`, { borderColor, color: textColor }]}
         placeholder="Email"
         placeholderTextColor={borderColor}
         value={newMemberEmail}
@@ -129,9 +130,9 @@ export default function CreateGroup() {
         }}
         keyboardType="email-address"
       />
-      {emailError ? <Text style={tw`text-red-500 text-sm mb-2`}>{emailError}</Text> : null}
+      {emailError ? <Text style={tw`text-red-500 text-sm mb-3`}>{emailError}</Text> : null}
       <TextInput
-        style={[tw`border rounded p-2 mb-2`, { borderColor, color: textColor }]}
+        style={[tw`border rounded-lg p-3 mb-3`, { borderColor, color: textColor }]}
         placeholder="Phone"
         placeholderTextColor={borderColor}
         value={newMemberPhone}
@@ -141,23 +142,39 @@ export default function CreateGroup() {
         }}
         keyboardType="phone-pad"
       />
-      {phoneError ? <Text style={tw`text-red-500 text-sm mb-2`}>{phoneError}</Text> : null}
+      {phoneError ? <Text style={tw`text-red-500 text-sm mb-3`}>{phoneError}</Text> : null}
 
-      <Button title="Add Member" onPress={addMember} disabled={isAddMemberDisabled} />
+      <TouchableOpacity
+        style={[
+          tw`rounded-lg p-4 mb-6`,
+          { backgroundColor: buttonColor, opacity: isAddMemberDisabled ? 0.5 : 1 },
+        ]}
+        onPress={addMember}
+        disabled={isAddMemberDisabled}
+      >
+        <Text style={[tw`text-center text-white font-bold`]}>Add Member</Text>
+      </TouchableOpacity>
 
-      <Text style={[tw`text-lg font-bold mt-5 mb-2`, { color: textColor }]}>Members List</Text>
+      <Text style={[tw`text-lg font-bold mb-4`, { color: textColor }]}>Members List</Text>
       <FlatList
         data={members}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Text style={[tw`p-2 border-b`, { color: textColor, borderColor }]}>{item.name} - {item.email}</Text>
+          <Text style={[tw`p-3 border-b`, { color: textColor, borderColor }]}>{item.name} - {item.email}</Text>
         )}
         ListEmptyComponent={<Text style={[tw`text-gray-500`, { color: textColor }]}>No members added</Text>}
       />
 
-      <View style={tw`mt-6`}>
-        <Button title="Create Group" onPress={handleCreateGroup} disabled={isCreateDisabled} />
-      </View>
+      <TouchableOpacity
+        style={[
+          tw`rounded-lg p-4 mt-6`,
+          { backgroundColor: buttonColor, opacity: isCreateDisabled ? 0.5 : 1 },
+        ]}
+        onPress={handleCreateGroup}
+        disabled={isCreateDisabled}
+      >
+        <Text style={[tw`text-center text-white font-bold`]}>Create Group</Text>
+      </TouchableOpacity>
     </View>
   );
 }
