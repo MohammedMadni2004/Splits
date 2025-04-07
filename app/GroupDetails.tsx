@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/native';
 import { useGroupStore } from '@/store/groupStore';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, useColorScheme } from 'react-native';
 import tw from 'twrnc';
 
 export default function GroupDetails() {
@@ -8,63 +8,96 @@ export default function GroupDetails() {
   const { groupId } = route.params as { groupId: string };
   const group = useGroupStore((state) => state.groups.find((g) => g.id === groupId));
 
+  const theme = useColorScheme();
+  const isDark = theme === 'dark';
+
+  const styles = {
+    backgroundColor: isDark ? '#121212' : '#F5F5F5',
+    cardBackground: isDark ? '#1E1E2C' : '#FFFFFF',
+    borderColor: isDark ? '#2C2C3E' : '#E0E0E0',
+    textColor: isDark ? '#F1F5F9' : '#1E293B',
+    highlight: isDark ? '#FFD700' : '#4CAF50',
+    fadedText: isDark ? '#A1A1AA' : '#6B7280',
+  };
+
   if (!group) {
     return (
-      <View style={tw`flex-1 justify-center items-center bg-white`}>
-        <Text style={tw`text-lg text-gray-500`}>Group not found</Text>
+      <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: styles.backgroundColor }]}>
+        <Text style={[tw`text-lg`, { color: styles.fadedText }]}>Group not found</Text>
       </View>
     );
   }
 
   return (
-    <View style={tw`flex-1 bg-white p-4`}>
-      <Text style={tw`text-xl font-bold mb-4`}>{group.name}</Text>
-      <Text style={tw`text-gray-600 mb-4`}>{group.description}</Text>
+    <View style={[tw`flex-1 p-4`, { backgroundColor: styles.backgroundColor }]}>
+      <Text style={[tw`text-3xl font-extrabold mb-4`, { color: styles.highlight }]}>
+        {group.name}
+      </Text>
+      <Text style={[tw`text-base mb-4`, { color: styles.fadedText }]}>
+        {group.description}
+      </Text>
 
-      <Text style={tw`text-lg font-bold mb-2`}>Members</Text>
+      <Text style={[tw`text-xl font-bold mb-2`, { color: styles.textColor }]}>Members</Text>
       <FlatList
         data={group.members}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Text style={tw`p-2 border-b border-gray-200`}>{item.name}</Text>
+          <Text style={[tw`p-2`, { color: styles.textColor }]}>{item.name}</Text>
         )}
       />
 
-      <Text style={tw`text-lg font-bold mt-4 mb-2`}>Events</Text>
+      <Text style={[tw`text-xl font-bold mt-6 mb-2`, { color: styles.textColor }]}>Events</Text>
       <FlatList
         data={group.events}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={tw`p-2 border-b border-gray-200`}>
-            <Text style={tw`font-bold`}>{item.title}</Text>
-            <Text>{item.description}</Text>
-            <Text>Amount: ₹{item.amount}</Text>
-            <Text>Payer: {group.members.find((m) => m.id === item.payer)?.name}</Text>
-            <Text>
-              Split: {Object.entries(item.splitBetween).map(([id, amount]) => {
-                const member = group.members.find((m) => m.id === id);
-                return `${member?.name || 'Unknown'}: ₹${amount}`;
-              }).join(', ')}
+          <View
+            style={[
+              tw`p-4 mb-3 rounded-2xl`,
+              {
+                backgroundColor: styles.cardBackground,
+                borderColor: styles.borderColor,
+                borderWidth: 1,
+              },
+            ]}
+          >
+            <Text style={[tw`text-lg font-bold`, { color: styles.highlight }]}>{item.title}</Text>
+            <Text style={[tw`text-sm mb-1`, { color: styles.textColor }]}>{item.description}</Text>
+            <Text style={[tw`text-sm`, { color: styles.fadedText }]}>Amount: ₹{item.amount}</Text>
+            <Text style={[tw`text-sm`, { color: styles.fadedText }]}>
+              Payer: {group.members.find((m) => m.id === item.payer)?.name || 'Unknown'}
+            </Text>
+            <Text style={[tw`text-sm`, { color: styles.fadedText }]}>
+              Split: {Object.entries(item.splitBetween)
+                .map(([id, amt]) => {
+                  const member = group.members.find((m) => m.id === id);
+                  return `${member?.name || 'Unknown'}: ₹${amt}`;
+                })
+                .join(', ')}
             </Text>
           </View>
         )}
-        ListEmptyComponent={<Text style={tw`text-gray-500`}>No events added</Text>}
+        ListEmptyComponent={
+          <Text style={[tw`text-sm`, { color: styles.fadedText }]}>No events added</Text>
+        }
       />
 
-      <Text style={tw`text-lg font-bold mt-4 mb-2`}>Payables</Text>
+      <Text style={[tw`text-xl font-bold mt-6 mb-2`, { color: styles.textColor }]}>Payables</Text>
       <FlatList
         data={group.payable}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => {
           const fromMember = group.members.find((m) => m.id === item.from);
           const toMember = group.members.find((m) => m.id === item.to);
           return (
-            <Text style={tw`p-2 border-b border-gray-200`}>
+            <Text style={[tw`p-2`, { color: styles.fadedText }]}>
               {fromMember?.name} owes {toMember?.name}: ₹{item.amount}
             </Text>
           );
         }}
-        ListEmptyComponent={<Text style={tw`text-gray-500`}>No payables</Text>}
+        ListEmptyComponent={
+          <Text style={[tw`text-sm`, { color: styles.fadedText }]}>No payables</Text>
+        }
       />
     </View>
   );
