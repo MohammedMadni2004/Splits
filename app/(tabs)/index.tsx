@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import { useGroupStore } from '@/store/groupStore';
 import { calculateTotals } from '@/utils/calculateTotals';
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
 
 export default function HomeScreen() {
   const isHydrated = useGroupStore((state) => state.isHydrated);
   const groups = useGroupStore((state) => state.groups);
   const [isLoading, setIsLoading] = useState(true);
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (isHydrated && isLoading) {
@@ -47,9 +49,7 @@ export default function HomeScreen() {
       />
       <TouchableOpacity
         style={tw`absolute bottom-8 right-8 bg-blue-500 w-12 h-12 rounded-full items-center justify-center shadow-lg`}
-        onPress={() => {
-          console.log('Add new group');
-        }}
+        onPress={() => navigation.navigate('CreateGroup')}
       >
         <Text style={tw`text-white text-2xl`}>+</Text>
       </TouchableOpacity>
