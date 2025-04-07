@@ -35,13 +35,21 @@ export default function EditEvent() {
     buttonText: isDark ? '#121212' : '#FFFFFF',
     cardBackground: isDark ? '#1F1F1F' : '#E5E5E5',
   };
+  if (!group) {
+    return (
+      <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: styles.backgroundColor }]}>
+        <Text style={{ color: styles.textColor, fontSize: 18 }}>Group not found.</Text>
+      </View>
+    );
+  }
 
   const [title, setTitle] = useState(event?.title || '');
   const [description, setDescription] = useState(event?.description || '');
   const [category, setCategory] = useState(event?.category || '');
   const [amount, setAmount] = useState(event?.amount?.toString() || '');
   const [payer, setPayer] = useState(event?.payer || '');
-  const [splitType, setSplitType] = useState<'equal' | 'percentage'>(event?.splitType || 'equal');
+  const [splitType, setSplitType] = useState<'equal' | 'percentage'>('equal');
+
   const [splitValues, setSplitValues] = useState<{ [key: string]: number }>(event?.splitBetween || {});
 
   useEffect(() => {
@@ -87,6 +95,7 @@ export default function EditEvent() {
     }
 
     const updatedEvent = {
+      id: eventId, // ✅ Add this line
       title: title.trim(),
       description: description.trim(),
       category: category.trim(),
@@ -96,6 +105,7 @@ export default function EditEvent() {
       timestamp: new Date(),
       splitType,
     };
+    
 
     editEvent(groupId, eventId, updatedEvent);
     Alert.alert('Success', 'Event updated successfully!');

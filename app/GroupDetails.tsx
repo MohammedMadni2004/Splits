@@ -2,7 +2,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { useGroupStore } from '@/store/groupStore';
 import { View, Text, FlatList, useColorScheme, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import tw from 'twrnc';
-
+import { Event } from '@/types';
 export default function GroupDetails() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -34,7 +34,7 @@ export default function GroupDetails() {
   const totalOwed = group.payable.reduce((sum, payment) => sum + payment.amount, 0);
   const totalReceived = group.events.reduce((sum, event) => sum + event.amount, 0);
 
-  const handleLongPressEvent = (event) => {
+  const handleLongPressEvent = (event:Event) => {
     Alert.alert(
       'Manage Event',
       `What would you like to do with "${event.title}"?`,

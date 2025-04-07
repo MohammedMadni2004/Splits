@@ -4,6 +4,7 @@ import { calculateTotals } from '@/utils/calculateTotals';
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, useColorScheme, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
+import { Group } from '@/types';
 
 export default function HomeScreen() {
   const isHydrated = useGroupStore((state) => state.isHydrated);
@@ -49,7 +50,7 @@ export default function HomeScreen() {
     0
   );
 
-  const handleLongPressGroup = (group) => {
+  const handleLongPressGroup = (group:Group) => {
     Alert.alert(
       'Manage Group',
       `What would you like to do with "${group.name}"?`,

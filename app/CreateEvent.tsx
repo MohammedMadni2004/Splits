@@ -42,6 +42,14 @@ export default function CreateEvent() {
   const [splitType, setSplitType] = useState<'equal' | 'percentage'>('equal');
   const [splitValues, setSplitValues] = useState<{ [key: string]: number }>({});
 
+  if (!group) {
+    return (
+      <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: styles.backgroundColor }]}>
+        <Text style={{ color: styles.textColor, fontSize: 18 }}>Group not found.</Text>
+      </View>
+    );
+  }
+
   const handleSplitChange = () => {
     if (!amount || group.members.length === 0) return;
     const equalSplit = parseFloat(amount) / group.members.length;

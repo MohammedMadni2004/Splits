@@ -8,6 +8,7 @@ export default function EditGroup() {
   const route = useRoute();
   const navigation = useNavigation();
   const { groupId } = route.params as { groupId: string };
+
   const group = useGroupStore((state) => state.groups.find((g) => g.id === groupId));
   const editGroup = useGroupStore((state) => state.editGroup);
 
@@ -20,7 +21,18 @@ export default function EditGroup() {
       return;
     }
 
-    editGroup(groupId, { name: groupName.trim(), description: groupDescription.trim() });
+    if (!group) {
+      Alert.alert('Error', 'Group not found');
+      return;
+    }
+
+    const updatedGroup = {
+      ...group,
+      name: groupName.trim(),
+      description: groupDescription.trim(),
+    };
+
+    editGroup(groupId, updatedGroup);
     Alert.alert('Success', 'Group updated successfully!');
     navigation.goBack();
   };
