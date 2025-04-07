@@ -1,6 +1,6 @@
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useGroupStore } from '@/store/groupStore';
-import { View, Text, FlatList, useColorScheme, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, useColorScheme, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import tw from 'twrnc';
 
 export default function GroupDetails() {
@@ -8,6 +8,8 @@ export default function GroupDetails() {
   const navigation = useNavigation();
   const { groupId } = route.params as { groupId: string };
   const group = useGroupStore((state) => state.groups.find((g) => g.id === groupId));
+  const deleteEvent = useGroupStore((state) => state.deleteEvent);
+  const editEvent = useGroupStore((state) => state.editEvent);
 
   const theme = useColorScheme();
   const isDark = theme === 'dark';
@@ -31,6 +33,31 @@ export default function GroupDetails() {
 
   const totalOwed = group.payable.reduce((sum, payment) => sum + payment.amount, 0);
   const totalReceived = group.events.reduce((sum, event) => sum + event.amount, 0);
+
+  const handleLongPressEvent = (event) => {
+    Alert.alert(
+      'Manage Event',
+      `What would you like to do with "${event.title}"?`,
+      [
+        {
+          text: 'Edit',
+          onPress: () => {
+            // Navigate to a screen to edit the event
+            navigation.navigate('EditEvent', { groupId: group.id, eventId: event.id });
+          },
+        },
+        {
+          text: 'Delete',
+          onPress: () => {
+            deleteEvent(group.id, event.id);
+            Alert.alert('Success', 'Event deleted successfully!');
+          },
+          style: 'destructive',
+        },
+        { text: 'Cancel', style: 'cancel' },
+      ]
+    );
+  };
 
   return (
     <ScrollView
@@ -89,7 +116,8 @@ export default function GroupDetails() {
         data={group.events}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View
+          <TouchableOpacity
+            onLongPress={() => handleLongPressEvent(item)}
             style={[
               tw`p-4 mb-3 rounded-2xl`,
               {
@@ -113,7 +141,7 @@ export default function GroupDetails() {
                 })
                 .join(', ')}
             </Text>
-          </View>
+          </TouchableOpacity>
         )}
         ListEmptyComponent={
           <Text style={[tw`text-sm`, { color: styles.fadedText }]}>No events added</Text>

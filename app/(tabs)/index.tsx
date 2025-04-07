@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useGroupStore } from '@/store/groupStore';
 import { calculateTotals } from '@/utils/calculateTotals';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, useColorScheme, TextInput } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, useColorScheme, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
 
 export default function HomeScreen() {
   const isHydrated = useGroupStore((state) => state.isHydrated);
   const groups = useGroupStore((state) => state.groups);
+  const deleteGroup = useGroupStore((state) => state.deleteGroup);
+  const editGroup = useGroupStore((state) => state.editGroup);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const navigation = useNavigation();
@@ -46,6 +48,31 @@ export default function HomeScreen() {
       group.payable.reduce((sum, payment) => (payment.from === 'currentUserId' ? sum + payment.amount : sum), 0),
     0
   );
+
+  const handleLongPressGroup = (group) => {
+    Alert.alert(
+      'Manage Group',
+      `What would you like to do with "${group.name}"?`,
+      [
+        {
+          text: 'Edit',
+          onPress: () => {
+            // Navigate to a screen to edit the group
+            navigation.navigate('EditGroup', { groupId: group.id });
+          },
+        },
+        {
+          text: 'Delete',
+          onPress: () => {
+            deleteGroup(group.id);
+            Alert.alert('Success', 'Group deleted successfully!');
+          },
+          style: 'destructive',
+        },
+        { text: 'Cancel', style: 'cancel' },
+      ]
+    );
+  };
 
   if (isLoading) {
     return (
@@ -134,6 +161,7 @@ export default function HomeScreen() {
                 },
               ]}
               onPress={() => navigation.navigate('GroupDetails', { groupId: item.id })}
+              onLongPress={() => handleLongPressGroup(item)}
             >
               <Text
                 style={[

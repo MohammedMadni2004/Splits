@@ -11,6 +11,10 @@ type GroupStore = {
   removeGroup: (groupId: string) => void;
   resetGroups: () => void;
   addEvent: (groupId: string, event: Event) => void;
+  deleteGroup: (groupId: string) => void;
+  editGroup: (groupId: string, updatedGroup: Group) => void;
+  deleteEvent: (groupId: string, eventId: string) => void;
+  editEvent: (groupId: string, eventId: string, updatedEvent: Event) => void;
 };
 
 export const useGroupStore = create<GroupStore>()(
@@ -36,6 +40,41 @@ export const useGroupStore = create<GroupStore>()(
           groups: state.groups.map((group) =>
             group.id === groupId
               ? { ...group, events: [...group.events, event] }
+              : group
+          ),
+        })),
+
+      deleteGroup: (groupId) =>
+        set((state) => ({
+          groups: state.groups.filter((g) => g.id !== groupId),
+        })),
+
+      editGroup: (groupId, updatedGroup) =>
+        set((state) => ({
+          groups: state.groups.map((group) =>
+            group.id === groupId ? { ...group, ...updatedGroup } : group
+          ),
+        })),
+
+      deleteEvent: (groupId, eventId) =>
+        set((state) => ({
+          groups: state.groups.map((group) =>
+            group.id === groupId
+              ? { ...group, events: group.events.filter((event) => event.id !== eventId) }
+              : group
+          ),
+        })),
+
+      editEvent: (groupId, eventId, updatedEvent) =>
+        set((state) => ({
+          groups: state.groups.map((group) =>
+            group.id === groupId
+              ? {
+                  ...group,
+                  events: group.events.map((event) =>
+                    event.id === eventId ? { ...event, ...updatedEvent } : event
+                  ),
+                }
               : group
           ),
         })),
