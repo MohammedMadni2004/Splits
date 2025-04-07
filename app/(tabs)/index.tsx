@@ -33,14 +33,17 @@ export default function HomeScreen() {
         renderItem={({ item }) => {
           const { totalAmount, totalOwed, totalPaid } = calculateTotals(item);
           return (
-            <View style={tw`bg-gray-200 p-4 mb-3 rounded`}>
+            <TouchableOpacity
+              style={tw`bg-gray-200 p-4 mb-3 rounded`}
+              onPress={() => navigation.navigate('GroupDetails', { groupId: item.id })}
+            >
               <Text style={tw`text-lg font-bold`}>{item.name}</Text>
               <Text>{item.description}</Text>
               <Text>Members: {item.members.map((m) => m.name).join(', ')}</Text>
               <Text style={tw`mt-2 text-sm`}>Total Amount: ₹{totalAmount}</Text>
               <Text>Total Owed: ₹{totalOwed}</Text>
               <Text>Total Paid: ₹{totalPaid}</Text>
-            </View>
+            </TouchableOpacity>
           );
         }}
         ListEmptyComponent={
