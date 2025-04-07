@@ -42,7 +42,7 @@ export default function GroupDetails() {
         {
           text: 'Edit',
           onPress: () => {
-            // Navigate to a screen to edit the event
+            // Ensure correct navigation to EditEvent screen
             navigation.navigate('EditEvent', { groupId: group.id, eventId: event.id });
           },
         },

@@ -87,7 +87,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="GroupDetails" options={{ headerShown: false }} />
-
+        <Stack.Screen name="EditEvent" options={{ headerShown: true, title: 'Edit Event' }} />
       </Stack>
       <StatusBar style={isDarkTheme ? 'light' : 'dark'} />
     </ThemeProvider>

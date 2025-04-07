@@ -64,20 +64,25 @@ export const useGroupStore = create<GroupStore>()(
               : group
           ),
         })),
-
-      editEvent: (groupId, eventId, updatedEvent) =>
-        set((state) => ({
-          groups: state.groups.map((group) =>
-            group.id === groupId
-              ? {
-                  ...group,
-                  events: group.events.map((event) =>
-                    event.id === eventId ? { ...event, ...updatedEvent } : event
-                  ),
-                }
-              : group
-          ),
-        })),
+        editEvent: (groupId, eventId, updatedEvent) =>
+          set((state) => ({
+            groups: state.groups.map((group) =>
+              group.id === groupId
+                ? {
+                    ...group,
+                    events: group.events.map((event) =>
+                      event.id === eventId
+                        ? {
+                            ...event,
+                            ...updatedEvent, // updates all passed fields
+                            timestamp: updatedEvent.timestamp || event.timestamp,
+                          }
+                        : event
+                    ),
+                  }
+                : group
+            ),
+          })),
     }),
     {
       name: 'group-storage',
