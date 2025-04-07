@@ -1,0 +1,36 @@
+import { create } from 'zustand';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { Group } from '@/types';
+import { dummyGroups } from '@/constants/groupData';
+
+type GroupStore = {
+  groups: Group[];
+  addGroup: (group: Group) => void;
+  removeGroup: (groupId: string) => void;
+  resetGroups: () => void;
+};
+
+export const useGroupStore = create<GroupStore>()(
+  persist(
+    (set) => ({
+      groups: dummyGroups, 
+
+      addGroup: (group) =>
+        set((state) => ({
+          groups: [...state.groups, group],
+        })),
+
+      removeGroup: (groupId) =>
+        set((state) => ({
+          groups: state.groups.filter((g) => g.id !== groupId),
+        })),
+
+      resetGroups: () => set({ groups: dummyGroups }), 
+    }),
+    {
+      name: 'group-storage',
+      storage: createJSONStorage(() => AsyncStorage), 
+    }
+  )
+);
