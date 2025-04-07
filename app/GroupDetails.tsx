@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/native';
 import { useGroupStore } from '@/store/groupStore';
-import { View, Text, FlatList, useColorScheme } from 'react-native';
+import { View, Text, FlatList, useColorScheme, ScrollView } from 'react-native';
 import tw from 'twrnc';
 
 export default function GroupDetails() {
@@ -28,14 +28,43 @@ export default function GroupDetails() {
     );
   }
 
+  const totalOwed = group.payable.reduce((sum, payment) => sum + payment.amount, 0);
+  const totalReceived = group.events.reduce((sum, event) => sum + event.amount, 0);
+
   return (
-    <View style={[tw`flex-1 p-4`, { backgroundColor: styles.backgroundColor }]}>
+    <ScrollView
+      style={[tw`flex-1`, { backgroundColor: styles.backgroundColor }]}
+      contentContainerStyle={tw`p-4`}
+    >
       <Text style={[tw`text-3xl font-extrabold mb-4`, { color: styles.highlight }]}>
         {group.name}
       </Text>
       <Text style={[tw`text-base mb-4`, { color: styles.fadedText }]}>
         {group.description}
       </Text>
+
+      {/* Summary Section */}
+      <View
+        style={[
+          tw`p-4 mb-6 rounded-lg`,
+          {
+            backgroundColor: styles.cardBackground,
+            borderColor: styles.borderColor,
+            borderWidth: 1,
+          },
+        ]}
+      >
+        <Text style={[tw`text-lg font-bold mb-2`, { color: styles.textColor }]}>Group Analysis</Text>
+        <Text style={[tw`text-sm`, { color: styles.textColor }]}>
+          Total Owed: ₹{totalOwed}
+        </Text>
+        <Text style={[tw`text-sm`, { color: styles.textColor }]}>
+          Total Received: ₹{totalReceived}
+        </Text>
+        <Text style={[tw`text-sm`, { color: styles.textColor }]}>
+          Net Balance: ₹{totalReceived - totalOwed}
+        </Text>
+      </View>
 
       <Text style={[tw`text-xl font-bold mb-2`, { color: styles.textColor }]}>Members</Text>
       <FlatList
@@ -44,6 +73,10 @@ export default function GroupDetails() {
         renderItem={({ item }) => (
           <Text style={[tw`p-2`, { color: styles.textColor }]}>{item.name}</Text>
         )}
+        ListEmptyComponent={
+          <Text style={[tw`text-sm`, { color: styles.fadedText }]}>No members found</Text>
+        }
+        scrollEnabled={false} // Disable scrolling for FlatList
       />
 
       <Text style={[tw`text-xl font-bold mt-6 mb-2`, { color: styles.textColor }]}>Events</Text>
@@ -80,6 +113,7 @@ export default function GroupDetails() {
         ListEmptyComponent={
           <Text style={[tw`text-sm`, { color: styles.fadedText }]}>No events added</Text>
         }
+        scrollEnabled={false} // Disable scrolling for FlatList
       />
 
       <Text style={[tw`text-xl font-bold mt-6 mb-2`, { color: styles.textColor }]}>Payables</Text>
@@ -98,7 +132,8 @@ export default function GroupDetails() {
         ListEmptyComponent={
           <Text style={[tw`text-sm`, { color: styles.fadedText }]}>No payables</Text>
         }
+        scrollEnabled={false} // Disable scrolling for FlatList
       />
-    </View>
+    </ScrollView>
   );
 }
