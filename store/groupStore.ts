@@ -1,15 +1,16 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { Group } from '@/types';
+import { Group, Event } from '@/types';
 import { dummyGroups } from '@/constants/groupData';
 
 type GroupStore = {
   groups: Group[];
+  isHydrated: boolean;
   addGroup: (group: Group) => void;
   removeGroup: (groupId: string) => void;
   resetGroups: () => void;
-  isHydrated: boolean;
+  addEvent: (groupId: string, event: Event) => void;
 };
 
 export const useGroupStore = create<GroupStore>()(
@@ -29,6 +30,15 @@ export const useGroupStore = create<GroupStore>()(
         })),
 
       resetGroups: () => set({ groups: dummyGroups }),
+
+      addEvent: (groupId, event) =>
+        set((state) => ({
+          groups: state.groups.map((group) =>
+            group.id === groupId
+              ? { ...group, events: [...group.events, event] }
+              : group
+          ),
+        })),
     }),
     {
       name: 'group-storage',

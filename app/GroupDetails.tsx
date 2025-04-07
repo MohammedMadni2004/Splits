@@ -1,10 +1,11 @@
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { useGroupStore } from '@/store/groupStore';
-import { View, Text, FlatList, useColorScheme, ScrollView } from 'react-native';
+import { View, Text, FlatList, useColorScheme, ScrollView, TouchableOpacity } from 'react-native';
 import tw from 'twrnc';
 
 export default function GroupDetails() {
   const route = useRoute();
+  const navigation = useNavigation();
   const { groupId } = route.params as { groupId: string };
   const group = useGroupStore((state) => state.groups.find((g) => g.id === groupId));
 
@@ -76,7 +77,7 @@ export default function GroupDetails() {
         ListEmptyComponent={
           <Text style={[tw`text-sm`, { color: styles.fadedText }]}>No members found</Text>
         }
-        scrollEnabled={false} // Disable scrolling for FlatList
+        scrollEnabled={false} 
       />
 
       <Text style={[tw`text-xl font-bold mt-6 mb-2`, { color: styles.textColor }]}>Events</Text>
@@ -132,8 +133,32 @@ export default function GroupDetails() {
         ListEmptyComponent={
           <Text style={[tw`text-sm`, { color: styles.fadedText }]}>No payables</Text>
         }
-        scrollEnabled={false} // Disable scrolling for FlatList
+        scrollEnabled={false} 
       />
+
+      <TouchableOpacity
+        style={[
+          tw`rounded-lg p-4 mt-6`,
+          {
+            backgroundColor: styles.highlight,
+            shadowColor: isDark ? '#000' : '#D3D3D3',
+            shadowOpacity: 0.3,
+            shadowRadius: 4,
+          },
+        ]}
+        onPress={() => navigation.navigate('CreateEvent', { groupId: group.id })}
+      >
+        <Text
+          style={[
+            tw`text-center font-bold`,
+            {
+              color: isDark ? '#121212' : '#FFFFFF',
+            },
+          ]}
+        >
+          Create New Event
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
