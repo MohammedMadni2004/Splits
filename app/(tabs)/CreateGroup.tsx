@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { useGroupStore } from '@/store/groupStore';
 import { Member } from '@/types';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import tw from 'twrnc';
 import { z } from 'zod';
 
@@ -9,6 +10,10 @@ const emailSchema = z.string().email({ message: 'Invalid email address' });
 const phoneSchema = z.string().regex(/^\d{10}$/, { message: 'Phone number must be 10 digits' });
 
 export default function CreateGroup() {
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const borderColor = useThemeColor({}, 'icon');
+
   const addGroup = useGroupStore((state) => state.addGroup);
 
   const [groupName, setGroupName] = useState('');
@@ -85,34 +90,38 @@ export default function CreateGroup() {
   const isCreateDisabled = !groupName.trim() || members.length < 2;
 
   return (
-    <View style={tw`flex-1 bg-white p-4`}>
-      <Text style={tw`text-xl font-bold mb-4`}>Create Group</Text>
+    <View style={[tw`flex-1 p-4`, { backgroundColor }]}>
+      <Text style={[tw`text-xl font-bold mb-4`, { color: textColor }]}>Create Group</Text>
 
       <TextInput
-        style={tw`border border-gray-300 rounded p-2 mb-3`}
+        style={[tw`border rounded p-2 mb-3`, { borderColor, color: textColor }]}
         placeholder="Group Name"
+        placeholderTextColor={borderColor}
         value={groupName}
         onChangeText={setGroupName}
       />
 
       <TextInput
-        style={tw`border border-gray-300 rounded p-2 mb-3`}
+        style={[tw`border rounded p-2 mb-3`, { borderColor, color: textColor }]}
         placeholder="Group Description"
+        placeholderTextColor={borderColor}
         value={groupDescription}
         onChangeText={setGroupDescription}
       />
 
-      <Text style={tw`text-lg font-bold mt-4 mb-2`}>Add Member</Text>
+      <Text style={[tw`text-lg font-bold mt-4 mb-2`, { color: textColor }]}>Add Member</Text>
 
       <TextInput
-        style={tw`border border-gray-300 rounded p-2 mb-2`}
+        style={[tw`border rounded p-2 mb-2`, { borderColor, color: textColor }]}
         placeholder="Name"
+        placeholderTextColor={borderColor}
         value={newMemberName}
         onChangeText={setNewMemberName}
       />
       <TextInput
-        style={tw`border border-gray-300 rounded p-2 mb-2`}
+        style={[tw`border rounded p-2 mb-2`, { borderColor, color: textColor }]}
         placeholder="Email"
+        placeholderTextColor={borderColor}
         value={newMemberEmail}
         onChangeText={(text) => {
           setNewMemberEmail(text);
@@ -122,8 +131,9 @@ export default function CreateGroup() {
       />
       {emailError ? <Text style={tw`text-red-500 text-sm mb-2`}>{emailError}</Text> : null}
       <TextInput
-        style={tw`border border-gray-300 rounded p-2 mb-2`}
+        style={[tw`border rounded p-2 mb-2`, { borderColor, color: textColor }]}
         placeholder="Phone"
+        placeholderTextColor={borderColor}
         value={newMemberPhone}
         onChangeText={(text) => {
           setNewMemberPhone(text);
@@ -135,16 +145,14 @@ export default function CreateGroup() {
 
       <Button title="Add Member" onPress={addMember} disabled={isAddMemberDisabled} />
 
-      <Text style={tw`text-lg font-bold mt-5 mb-2`}>Members List</Text>
+      <Text style={[tw`text-lg font-bold mt-5 mb-2`, { color: textColor }]}>Members List</Text>
       <FlatList
         data={members}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Text style={tw`p-2 border-b border-gray-200`}>
-            {item.name} - {item.email}
-          </Text>
+          <Text style={[tw`p-2 border-b`, { color: textColor, borderColor }]}>{item.name} - {item.email}</Text>
         )}
-        ListEmptyComponent={<Text style={tw`text-gray-500`}>No members added</Text>}
+        ListEmptyComponent={<Text style={[tw`text-gray-500`, { color: textColor }]}>No members added</Text>}
       />
 
       <View style={tw`mt-6`}>
