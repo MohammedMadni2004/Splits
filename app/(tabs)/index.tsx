@@ -28,6 +28,18 @@ export default function HomeScreen() {
     }
   }, [isHydrated, isLoading]);
 
+  const totalOwedOrReceived = groups.reduce(
+    (total, group) => total + group.payable.reduce((sum, payment) => sum + payment.amount, 0),
+    0
+  );
+
+  const totalToBePaid = groups.reduce(
+    (total, group) =>
+      total +
+      group.payable.reduce((sum, payment) => (payment.from === 'currentUserId' ? sum + payment.amount : sum), 0),
+    0
+  );
+
   if (isLoading) {
     return (
       <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: styles.backgroundColor }]}>
@@ -58,6 +70,29 @@ export default function HomeScreen() {
       >
         Your Groups
       </Text>
+
+      <Text
+        style={[
+          tw`text-lg font-bold mb-2`,
+          {
+            color: isDark ? '#FFD700' : '#1E293B',
+          },
+        ]}
+      >
+        Total Owed/To Be Received: ₹{totalOwedOrReceived}
+      </Text>
+
+      <Text
+        style={[
+          tw`text-lg font-bold mb-4`,
+          {
+            color: isDark ? '#FFD700' : '#1E293B',
+          },
+        ]}
+      >
+        Total To Be Paid: ₹{totalToBePaid}
+      </Text>
+
       <FlatList
         data={groups}
         keyExtractor={(item) => item.id}
