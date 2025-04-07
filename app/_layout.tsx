@@ -38,23 +38,51 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={isDarkTheme ? DarkTheme : DefaultTheme}>
-      <View style={[tw`flex-row justify-between items-center p-4`, { backgroundColor: themeStyles.backgroundColor }]}>
-        <Text style={[tw`text-lg font-bold`, { color: themeStyles.textColor }]}>Splitzz</Text>
+      <View
+        style={[
+          tw`flex-row justify-between items-center p-4 shadow-lg`,
+          {
+            backgroundColor: isDarkTheme ? '#1E1E2C' : '#F8F9FA',
+            borderBottomWidth: 1,
+            borderBottomColor: isDarkTheme ? '#2C2C3E' : '#E0E0E0',
+          },
+        ]}
+      >
+        <Text
+          style={[
+            tw`text-xl font-extrabold`,
+            {
+              color: isDarkTheme ? '#FFD700' : '#1E293B',
+              textShadowColor: isDarkTheme ? '#000' : '#D3D3D3',
+              textShadowOffset: { width: 1, height: 1 },
+              textShadowRadius: 2,
+            },
+          ]}
+        >
+          Splitzz
+        </Text>
         <View style={tw`flex-row items-center`}>
-          <Text style={[tw`mr-2`, { color: themeStyles.textColor }]}>Dark Mode</Text>
+          <Text style={[tw`mr-2`, { color: isDarkTheme ? '#E0E0E0' : '#212121' }]}>Dark Mode</Text>
           <Switch
             value={isDarkTheme}
             onValueChange={toggleTheme} // Update the theme state on toggle
-            thumbColor={themeStyles.accentColor}
+            thumbColor={isDarkTheme ? '#FFD700' : '#4CAF50'}
             trackColor={{ false: '#BDBDBD', true: '#757575' }}
           />
         </View>
       </View>
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: themeStyles.backgroundColor },
-          headerTintColor: themeStyles.textColor,
-          contentStyle: { backgroundColor: themeStyles.backgroundColor },
+          headerStyle: {
+            backgroundColor: isDarkTheme ? '#1E1E2C' : '#F8F9FA',
+            shadowColor: isDarkTheme ? '#000' : '#D3D3D3',
+            shadowOpacity: 0.2,
+            shadowRadius: 4,
+          },
+          headerTintColor: isDarkTheme ? '#FFD700' : '#1E293B',
+          contentStyle: {
+            backgroundColor: isDarkTheme ? '#121212' : '#FFFFFF',
+          },
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

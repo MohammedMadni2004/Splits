@@ -37,8 +37,27 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={[tw`flex-1 p-4`, { backgroundColor: styles.backgroundColor }]}>
-      <Text style={[tw`text-3xl font-bold mb-6`, { color: styles.textColor }]}>Your Groups</Text>
+    <View
+      style={[
+        tw`flex-1 p-4`,
+        {
+          backgroundColor: isDark ? '#121212' : '#F5F5F5',
+        },
+      ]}
+    >
+      <Text
+        style={[
+          tw`text-3xl font-extrabold mb-6`,
+          {
+            color: isDark ? '#FFD700' : '#1E293B',
+            textShadowColor: isDark ? '#000' : '#D3D3D3',
+            textShadowOffset: { width: 1, height: 1 },
+            textShadowRadius: 2,
+          },
+        ]}
+      >
+        Your Groups
+      </Text>
       <FlatList
         data={groups}
         keyExtractor={(item) => item.id}
@@ -47,30 +66,93 @@ export default function HomeScreen() {
           return (
             <TouchableOpacity
               style={[
-                tw`p-4 mb-4 rounded-2xl shadow-md`,
+                tw`p-4 mb-4 rounded-2xl shadow-lg`,
                 {
-                  backgroundColor: styles.cardBackground,
-                  elevation: 4,
+                  backgroundColor: isDark ? '#1E1E2C' : '#FFFFFF',
+                  borderColor: isDark ? '#2C2C3E' : '#E0E0E0',
+                  borderWidth: 1,
+                  shadowColor: isDark ? '#000' : '#D3D3D3',
+                  shadowOpacity: 0.3,
+                  shadowRadius: 6,
                 },
               ]}
               onPress={() => navigation.navigate('GroupDetails', { groupId: item.id })}
             >
-              <Text style={[tw`text-xl font-semibold`, { color: styles.textColor }]}>{item.name}</Text>
-              <Text style={[tw`text-sm mb-2`, { color: styles.textColor }]}>{item.description}</Text>
+              <Text
+                style={[
+                  tw`text-xl font-semibold`,
+                  {
+                    color: isDark ? '#FFD700' : '#1E293B',
+                  },
+                ]}
+              >
+                {item.name}
+              </Text>
+              <Text
+                style={[
+                  tw`text-sm mb-2`,
+                  {
+                    color: isDark ? '#E0E0E0' : '#212121',
+                  },
+                ]}
+              >
+                {item.description}
+              </Text>
               <View>
-                <Text style={[tw`text-sm mb-1`, { color: styles.textColor }]}>
+                <Text
+                  style={[
+                    tw`text-sm mb-1`,
+                    {
+                      color: isDark ? '#E0E0E0' : '#212121',
+                    },
+                  ]}
+                >
                   Members: {item.members.map((m) => m.name).join(', ')}
                 </Text>
-                <Text style={[tw`text-sm`, { color: styles.textColor }]}>Total Amount: ₹{totalAmount}</Text>
-                <Text style={[tw`text-sm`, { color: styles.textColor }]}>Total Owed: ₹{totalOwed}</Text>
-                <Text style={[tw`text-sm`, { color: styles.textColor }]}>Total Paid: ₹{totalPaid}</Text>
+                <Text
+                  style={[
+                    tw`text-sm`,
+                    {
+                      color: isDark ? '#FFD700' : '#4CAF50',
+                    },
+                  ]}
+                >
+                  Total Amount: ₹{totalAmount}
+                </Text>
+                <Text
+                  style={[
+                    tw`text-sm`,
+                    {
+                      color: isDark ? '#FFD700' : '#4CAF50',
+                    },
+                  ]}
+                >
+                  Total Owed: ₹{totalOwed}
+                </Text>
+                <Text
+                  style={[
+                    tw`text-sm`,
+                    {
+                      color: isDark ? '#FFD700' : '#4CAF50',
+                    },
+                  ]}
+                >
+                  Total Paid: ₹{totalPaid}
+                </Text>
               </View>
             </TouchableOpacity>
           );
         }}
         ListEmptyComponent={
-          <Text style={[tw`text-center text-lg`, { color: styles.textColor }]}>
-            No groups available. Add a new group!
+          <Text
+            style={[
+              tw`text-center text-lg`,
+              {
+                color: isDark ? '#757575' : '#BDBDBD',
+              },
+            ]}
+          >
+            No groups found
           </Text>
         }
       />
@@ -78,13 +160,13 @@ export default function HomeScreen() {
         style={[
           tw`absolute bottom-8 right-8 w-16 h-16 rounded-full items-center justify-center shadow-xl`,
           {
-            backgroundColor: styles.buttonBackground,
+            backgroundColor: isDark ? '#FFD700' : '#4CAF50',
             elevation: 6,
           },
         ]}
         onPress={() => navigation.navigate('CreateGroup')}
       >
-        <Text style={[tw`text-3xl font-bold`, { color: styles.buttonText }]}>+</Text>
+        <Text style={[tw`text-3xl font-bold`, { color: isDark ? '#121212' : '#FFFFFF' }]}>+</Text>
       </TouchableOpacity>
     </View>
   );

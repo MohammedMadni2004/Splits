@@ -96,26 +96,63 @@ export default function CreateGroup() {
   const isCreateDisabled = !groupName.trim() || members.length < 2;
 
   return (
-    <View style={[tw`flex-1 p-6`, { backgroundColor: styles.backgroundColor }]}>
-      <Text style={[tw`text-2xl font-bold mb-6`, { color: styles.textColor }]}>Create Group</Text>
+    <View
+      style={[
+        tw`flex-1 p-6`,
+        {
+          backgroundColor: isDark ? '#121212' : '#F5F5F5',
+          borderRadius: 10,
+          shadowColor: isDark ? '#000' : '#D3D3D3',
+          shadowOpacity: 0.2,
+          shadowRadius: 6,
+        },
+      ]}
+    >
+      <Text
+        style={[
+          tw`text-2xl font-extrabold mb-6`,
+          {
+            color: isDark ? '#FFD700' : '#1E293B',
+            textShadowColor: isDark ? '#000' : '#D3D3D3',
+            textShadowOffset: { width: 1, height: 1 },
+            textShadowRadius: 2,
+          },
+        ]}
+      >
+        Create Group
+      </Text>
 
       <TextInput
-        style={[tw`border rounded-lg p-3 mb-4`, { borderColor: styles.borderColor, color: styles.textColor }]}
+        style={[
+          tw`border rounded-lg p-3 mb-4`,
+          {
+            borderColor: isDark ? '#FFD700' : '#4CAF50',
+            color: isDark ? '#E0E0E0' : '#212121',
+            backgroundColor: isDark ? '#1E1E2C' : '#FFFFFF',
+          },
+        ]}
         placeholder="Group Name"
-        placeholderTextColor={styles.borderColor}
+        placeholderTextColor={isDark ? '#757575' : '#BDBDBD'}
         value={groupName}
         onChangeText={setGroupName}
       />
 
       <TextInput
-        style={[tw`border rounded-lg p-3 mb-4`, { borderColor: styles.borderColor, color: styles.textColor }]}
+        style={[
+          tw`border rounded-lg p-3 mb-4`,
+          {
+            borderColor: isDark ? '#FFD700' : '#4CAF50',
+            color: isDark ? '#E0E0E0' : '#212121',
+            backgroundColor: isDark ? '#1E1E2C' : '#FFFFFF',
+          },
+        ]}
         placeholder="Group Description"
-        placeholderTextColor={styles.borderColor}
+        placeholderTextColor={isDark ? '#757575' : '#BDBDBD'}
         value={groupDescription}
         onChangeText={setGroupDescription}
       />
 
-      <Text style={[tw`text-lg font-bold mb-4`, { color: styles.textColor }]}>Add Member</Text>
+      <Text style={[tw`text-lg font-bold mb-4`, { color: isDark ? '#FFD700' : '#1E293B' }]}>Add Member</Text>
 
       <TextInput
         style={[tw`border rounded-lg p-3 mb-3`, { borderColor: styles.borderColor, color: styles.textColor }]}
@@ -175,12 +212,27 @@ export default function CreateGroup() {
       <TouchableOpacity
         style={[
           tw`rounded-lg p-4 mt-6`,
-          { backgroundColor: styles.buttonBackground, opacity: isCreateDisabled ? 0.5 : 1 },
+          {
+            backgroundColor: isDark ? '#FFD700' : '#4CAF50',
+            opacity: isCreateDisabled ? 0.5 : 1,
+            shadowColor: isDark ? '#000' : '#D3D3D3',
+            shadowOpacity: 0.3,
+            shadowRadius: 4,
+          },
         ]}
         onPress={handleCreateGroup}
         disabled={isCreateDisabled}
       >
-        <Text style={[tw`text-center font-bold`, { color: styles.buttonText }]}>Create Group</Text>
+        <Text
+          style={[
+            tw`text-center font-bold`,
+            {
+              color: isDark ? '#121212' : '#FFFFFF',
+            },
+          ]}
+        >
+          Create Group
+        </Text>
       </TouchableOpacity>
     </View>
   );
