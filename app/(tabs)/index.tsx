@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useGroupStore } from '@/store/groupStore';
 import { calculateTotals } from '@/utils/calculateTotals';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, useColorScheme } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, useColorScheme, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
 
@@ -9,6 +9,7 @@ export default function HomeScreen() {
   const isHydrated = useGroupStore((state) => state.isHydrated);
   const groups = useGroupStore((state) => state.groups);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const navigation = useNavigation();
   const theme = useColorScheme(); // 'light' or 'dark'
 
@@ -20,6 +21,8 @@ export default function HomeScreen() {
     textColor: isDark ? '#f1f5f9' : '#1e293b',
     buttonBackground: isDark ? '#60a5fa' : '#3b82f6',
     buttonText: isDark ? '#1f2937' : '#ffffff',
+    inputBackground: isDark ? '#2D3748' : '#FFFFFF',
+    inputTextColor: isDark ? '#F1F5F9' : '#1E293B',
   };
 
   useEffect(() => {
@@ -27,6 +30,10 @@ export default function HomeScreen() {
       setIsLoading(false);
     }
   }, [isHydrated, isLoading]);
+
+  const filteredGroups = groups.filter((group) =>
+    group.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const totalOwedOrReceived = groups.reduce(
     (total, group) => total + group.payable.reduce((sum, payment) => sum + payment.amount, 0),
@@ -93,8 +100,23 @@ export default function HomeScreen() {
         Total To Be Paid: ₹{totalToBePaid}
       </Text>
 
+      <TextInput
+        style={[
+          tw`border rounded-lg p-3 mb-4`,
+          {
+            backgroundColor: styles.inputBackground,
+            color: styles.inputTextColor,
+            borderColor: isDark ? '#4A5568' : '#E2E8F0',
+          },
+        ]}
+        placeholder="Search Groups"
+        placeholderTextColor={isDark ? '#A0AEC0' : '#718096'}
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+
       <FlatList
-        data={groups}
+        data={filteredGroups}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
           const { totalAmount, totalOwed, totalPaid } = calculateTotals(item);
