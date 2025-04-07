@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import tw from 'twrnc';
 
 export default function HomeScreen() {
@@ -21,6 +21,14 @@ export default function HomeScreen() {
           </View>
         )}
       />
+      <TouchableOpacity
+        style={tw`absolute bottom-8 right-8 bg-blue-500 w-12 h-12 rounded-full items-center justify-center shadow-lg`}
+        onPress={() => {
+          // Handle "+" button press
+        }}
+      >
+        <Text style={tw`text-white text-2xl`}>+</Text>
+      </TouchableOpacity>
     </View>
   );
 }
