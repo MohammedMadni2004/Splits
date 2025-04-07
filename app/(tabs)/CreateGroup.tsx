@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, FlatList, TouchableOpacity, Alert, useColorScheme } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, Alert, useColorScheme, ScrollView } from 'react-native';
 import { useGroupStore } from '@/store/groupStore';
 import { Member } from '@/types';
 import tw from 'twrnc';
@@ -96,17 +96,14 @@ export default function CreateGroup() {
   const isCreateDisabled = !groupName.trim() || members.length < 2;
 
   return (
-    <View
+    <ScrollView
       style={[
-        tw`flex-1 p-6`,
+        tw`flex-1`,
         {
           backgroundColor: isDark ? '#121212' : '#F5F5F5',
-          borderRadius: 10,
-          shadowColor: isDark ? '#000' : '#D3D3D3',
-          shadowOpacity: 0.2,
-          shadowRadius: 6,
         },
       ]}
+      contentContainerStyle={tw`p-6`}
     >
       <Text
         style={[
@@ -207,6 +204,7 @@ export default function CreateGroup() {
           </Text>
         )}
         ListEmptyComponent={<Text style={[tw`text-gray-500`, { color: styles.textColor }]}>No members added</Text>}
+        scrollEnabled={false} // Disable scrolling for FlatList
       />
 
       <TouchableOpacity
@@ -234,6 +232,6 @@ export default function CreateGroup() {
           Create Group
         </Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
